@@ -1,7 +1,11 @@
 package com.javaspring.currencyconverter.controller;
 
 import com.javaspring.currencyconverter.entities.Conversion;
+import com.javaspring.currencyconverter.pojo.response.CurrencyRateResponsePojo;
 import com.javaspring.currencyconverter.services.ConversionService;
+import com.javaspring.currencyconverter.services.CurrencyConversionService;
+import com.javaspring.currencyconverter.util.CurrencyConversionApiCaller;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,11 +15,12 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("api/v1")
 public class ConversionController {
 
-    @Autowired
-    private ConversionService conversionService;
+    private final ConversionService conversionService;
+    private final CurrencyConversionService currencyConversionService;
 
     @GetMapping("/conversionhistory")
     public ResponseEntity<Page<Conversion>> getAllConversionHistory(@RequestParam(defaultValue = "0")int page,
@@ -63,4 +68,8 @@ public class ConversionController {
         }
     }
 
+    @GetMapping("currencyRates")
+    public ResponseEntity<CurrencyRateResponsePojo> getCurrencyRates(){
+        return ResponseEntity.ok(currencyConversionService.getCurrencyConversionRate());
+    }
 }
